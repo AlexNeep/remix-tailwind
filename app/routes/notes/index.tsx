@@ -34,55 +34,70 @@ export default function NoteIndexPage() {
               className="grid h-16 grid-flow-row grid-cols-6 items-center border-b-2  border-slate-800 bg-slate-50 p-4 last:border-b-0"
             >
               <div className="text-left">{name}</div>
-              <div className="text-center">x</div>
-              <div className="text-center">x</div>
-              <div className="text-center">x</div>
-              <div className="text-center">x</div>
-              <div className="text-center">-</div>
+              <Field value="x" />
+              <Field value="x" />
+              <Field value="x" />
+              <Field value="x" />
+              <Field value="x" />
             </div>
           ))}
-          <div className="grid h-16 grid-flow-row grid-cols-6 items-center  border-b-2 border-slate-800 bg-slate-50 p-4 last:border-b-0">
-            <input
-              type="text"
-              value={userEmployee.name}
-              onChange={(e) =>
-                setUserEmployee({ ...userEmployee, name: e.target.value })
-              }
-              className="shadow-xs ml-[-2] rounded bg-slate-200 px-2 text-left transition-all hover:bg-slate-300 hover:shadow-sm focus:bg-slate-300"
-            />
-
-            <EditableField
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="monday"
-            />
-            <EditableField
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="tuesday"
-            />
-            <EditableField
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="wednesday"
-            />
-            <EditableField
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="thursday"
-            />
-            <EditableField
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="friday"
-            />
-          </div>
+          <CurrentUserRow
+            userEmployee={userEmployee}
+            setUserEmployee={setUserEmployee}
+          />
         </div>
       </div>
     </div>
   );
 }
+interface CurrentUserRowProps {
+  userEmployee: Employee;
+  setUserEmployee: Function;
+}
 
+const CurrentUserRow: FunctionComponent<CurrentUserRowProps> = ({
+  userEmployee,
+  setUserEmployee,
+}) => {
+  return (
+    <div className="grid h-16 grid-flow-row grid-cols-6 items-center  border-b-2 border-slate-800 bg-slate-50 p-4 last:border-b-0">
+      <input
+        type="text"
+        value={userEmployee.name}
+        onChange={(e) =>
+          setUserEmployee({ ...userEmployee, name: e.target.value })
+        }
+        className="shadow-xs ml-[-2] rounded bg-slate-200 px-2 text-left transition-all hover:bg-slate-300 hover:shadow-sm focus:bg-slate-300"
+      />
+
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="monday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="tuesday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="wednesday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="thursday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="friday"
+      />
+    </div>
+  );
+};
 interface EditableFieldProps {
   userEmployee: Employee;
   setUserEmployee: Function;
@@ -95,28 +110,8 @@ const EditableField: FunctionComponent<EditableFieldProps> = ({
   day,
 }) => {
   return (
-    <Field
-      userEmployee={userEmployee}
-      setUserEmployee={setUserEmployee}
-      day={day}
-    />
-  );
-};
-
-interface FieldProps {
-  userEmployee: Employee;
-  setUserEmployee: Function;
-  day: keyof Days;
-}
-
-const Field: FunctionComponent<FieldProps> = ({
-  userEmployee,
-  setUserEmployee,
-  day,
-}) => {
-  return (
     <div
-      className="cursor-pointer select-none border-r-2 border-slate-300 text-center first:border-l-2 last:border-r-0"
+      className="cursor-pointer select-none"
       onClick={() =>
         setUserEmployee({
           ...userEmployee,
@@ -127,7 +122,19 @@ const Field: FunctionComponent<FieldProps> = ({
         })
       }
     >
-      {userEmployee.days[day] ? "in" : "-"}
+      <Field value={userEmployee.days[day] ? "in" : "-"} />
+    </div>
+  );
+};
+
+interface FieldProps {
+  value: string;
+}
+
+const Field: FunctionComponent<FieldProps> = ({ value }) => {
+  return (
+    <div className="border-r-2 border-slate-300 text-center first:border-l-2 last:border-r-0">
+      {value}
     </div>
   );
 };
