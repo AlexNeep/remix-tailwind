@@ -38,33 +38,16 @@ export async function action({ request }: ActionArgs) {
       { status: 400 }
     );
   }
-  console.log(supabase);
+
   const { user, session, error } = await supabase.auth.signUp({
     email,
     password,
   });
-  console.log(user, session, error);
-  // const existingUser = await getUserByEmail(email);
-  // if (existingUser) {
-  //   return json(
-  //     {
-  //       errors: {
-  //         email: "A user already exists with this email",
-  //         password: null,
-  //       },
-  //     },
-  //     { status: 400 }
-  //   );
-  // }
+  if (error) {
+    return json({ error });
+  }
 
-  // const user = await createUser(email, password);
-
-  // return createUserSession({
-  //   request,
-  //   userId: "1234",
-  //   remember: false,
-  //   redirectTo,
-  // });
+  console.log(user);
   return {};
 }
 
