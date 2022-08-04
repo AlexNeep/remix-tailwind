@@ -35,47 +35,14 @@ export default function NoteIndexPage() {
             >
               <div className="text-left">{name}</div>
               {weekDays.map((day, index) => (
-                <div key={index} className="text-center">
-                  {userDays?.[day] ? "in" : "-"}
-                </div>
+                <Field value={userDays?.[day] ? "in" : "-"} />
               ))}
             </div>
           ))}
-          <div className="grid h-16 grid-flow-row grid-cols-6 items-center  border-b-2 border-slate-800 bg-slate-50 p-4 last:border-b-0">
-            <input
-              type="text"
-              value={userEmployee.name}
-              onChange={(e) =>
-                setUserEmployee({ ...userEmployee, name: e.target.value })
-              }
-              className="shadow-xs ml-[-2] rounded bg-slate-200 px-2 text-left transition-all hover:bg-slate-300 hover:shadow-sm focus:bg-slate-300"
-            />
-            <Field
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="monday"
-            />
-            <Field
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="tuesday"
-            />
-            <Field
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="wednesday"
-            />
-            <Field
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="thursday"
-            />
-            <Field
-              userEmployee={userEmployee}
-              setUserEmployee={setUserEmployee}
-              day="friday"
-            />
-          </div>
+          <CurrentUserRow
+            userEmployee={userEmployee}
+            setUserEmployee={setUserEmployee}
+          />
         </div>
       </div>
       <button
@@ -84,6 +51,7 @@ export default function NoteIndexPage() {
             ...employees,
             { ...userEmployee, id: Math.floor(Math.random() * 10000) },
           ]);
+          setUserEmployee({ name: "", days: {} });
         }}
         className="mx-auto flex items-center justify-center rounded bg-green-400 py-2 px-4 shadow-sm"
       >
@@ -93,20 +61,67 @@ export default function NoteIndexPage() {
   );
 }
 
-interface FieldProps {
+interface CurrentUserRowProps {
+  userEmployee: Employee;
+  setUserEmployee: Function;
+}
+
+const CurrentUserRow: FunctionComponent<CurrentUserRowProps> = ({
+  userEmployee,
+  setUserEmployee,
+}) => {
+  return (
+    <div className="grid h-16 grid-flow-row grid-cols-6 items-center  border-b-2 border-slate-800 bg-slate-50 p-4 last:border-b-0">
+      <input
+        type="text"
+        value={userEmployee.name}
+        onChange={(e) =>
+          setUserEmployee({ ...userEmployee, name: e.target.value })
+        }
+        className="shadow-xs ml-[-2] rounded bg-slate-200 px-2 text-left transition-all hover:bg-slate-300 hover:shadow-sm focus:bg-slate-300"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="monday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="tuesday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="wednesday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="thursday"
+      />
+      <EditableField
+        userEmployee={userEmployee}
+        setUserEmployee={setUserEmployee}
+        day="friday"
+      />
+    </div>
+  );
+};
+interface EditableFieldProps {
   userEmployee: Employee;
   setUserEmployee: Function;
   day: keyof Days;
 }
 
-const Field: FunctionComponent<FieldProps> = ({
+const EditableField: FunctionComponent<EditableFieldProps> = ({
   userEmployee,
   setUserEmployee,
   day,
 }) => {
   return (
     <div
-      className="cursor-pointer select-none border-r-2 border-slate-300 text-center first:border-l-2 last:border-r-0"
+      className="cursor-pointer select-none"
       onClick={() =>
         setUserEmployee({
           ...userEmployee,
@@ -117,7 +132,19 @@ const Field: FunctionComponent<FieldProps> = ({
         })
       }
     >
-      {userEmployee.days[day] ? "in" : "-"}
+      <Field value={userEmployee.days[day] ? "in" : "-"} />
+    </div>
+  );
+};
+
+interface FieldProps {
+  value: string;
+}
+
+const Field: FunctionComponent<FieldProps> = ({ value }) => {
+  return (
+    <div className="border-r-2 border-slate-300 text-center first:border-l-2 last:border-r-0">
+      {value}
     </div>
   );
 };
