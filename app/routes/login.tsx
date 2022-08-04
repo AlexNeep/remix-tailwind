@@ -3,13 +3,12 @@ import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
 
-import { createUserSession, getUserId } from "~/session.server";
-import { verifyLogin } from "~/models/user.server";
+import { createUserSession } from "~/session.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
 export async function loader({ request }: LoaderArgs) {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
+  // const userId = await getUserId(request);
+  // if (userId) return redirect("/");
   return json({});
 }
 
@@ -41,21 +40,21 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const user = await verifyLogin(email, password);
+  // const user = await verifyLogin(email, password);
 
-  if (!user) {
-    return json(
-      { errors: { email: "Invalid email or password", password: null } },
-      { status: 400 }
-    );
-  }
+  // if (!user) {
+  //   return json(
+  //     { errors: { email: "Invalid email or password", password: null } },
+  //     { status: 400 }
+  //   );
+  // }
 
-  return createUserSession({
+  return {
     request,
-    userId: user.id,
+    userId: "1234",
     remember: remember === "on" ? true : false,
     redirectTo,
-  });
+  };
 }
 
 export const meta: MetaFunction = () => {
@@ -72,11 +71,11 @@ export default function LoginPage() {
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    if (actionData?.errors?.email) {
-      emailRef.current?.focus();
-    } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
-    }
+    // if (actionData?.errors?.email) {
+    //   emailRef.current?.focus();
+    // } else if (actionData?.errors?.password) {
+    //   passwordRef.current?.focus();
+    // }
   }, [actionData]);
 
   return (
@@ -99,15 +98,15 @@ export default function LoginPage() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
+                // aria-invalid={actionData?.errors?.email ? true : undefined}
                 aria-describedby="email-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
               />
-              {actionData?.errors?.email && (
+              {/* {actionData?.errors?.email && (
                 <div className="pt-1 text-red-700" id="email-error">
                   {actionData.errors.email}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 
@@ -125,15 +124,15 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 autoComplete="current-password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
+                // aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
               />
-              {actionData?.errors?.password && (
+              {/* {actionData?.errors?.password && (
                 <div className="pt-1 text-red-700" id="password-error">
                   {actionData.errors.password}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 

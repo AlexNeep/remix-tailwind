@@ -1,60 +1,133 @@
-import { Link } from "@remix-run/react";
+import { useState } from "react";
+import type { FunctionComponent } from "react";
+import type { Employee, Days } from "../types";
 
-import { useOptionalUser } from "~/utils";
+export default function NoteIndexPage() {
+  const employees: Employee[] = [
+    { id: 0, name: "Alex", days: {} },
+    { id: 1, name: "Lora", days: {} },
+    { id: 2, name: "Snowby", days: {} },
+    { id: 3, name: "Clooney Herrmann", days: {} },
+    { id: 3, name: "Clooney Herrmann", days: {} },
+  ];
 
-export default function Index() {
-  const user = useOptionalUser();
+  const [userEmployee, setUserEmployee] = useState<Employee>({
+    name: "alex",
+    days: {},
+  });
+
   return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
-      <div className="relative sm:pb-16 sm:pt-8">
-        <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
-            <div className="absolute inset-0">
-              <img
-                className="h-full w-full object-cover"
-                src="https://user-images.githubusercontent.com/1500684/157774694-99820c51-8165-4908-a031-34fc371ac0d6.jpg"
-                alt="Sonic Youth On Stage"
-              />
-              <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
+    <div className="">
+      <div className="w-md border-collapse rounded border-2 border-slate-500">
+        <div className="font-bol grid grid-flow-row grid-cols-6 border-b-2 bg-slate-100 p-4 shadow-md">
+          <div className="text-left">Name</div>
+          <div className="text-center">Mon</div>
+          <div className="text-center">Tue</div>
+          <div className="text-center">Wed</div>
+          <div className="text-center">divu</div>
+          <div className="text-center">Fri</div>
+        </div>
+        <div className="flex flex-col">
+          {employees.map(({ id, name }) => (
+            <div
+              key={id}
+              className="grid h-16 grid-flow-row grid-cols-6 items-center border-b-2  border-slate-800 bg-slate-50 p-4 last:border-b-0"
+            >
+              <div className="text-left">{name}</div>
+              <div className="text-center">x</div>
+              <div className="text-center">x</div>
+              <div className="text-center">x</div>
+              <div className="text-center">x</div>
+              <div className="text-center">-</div>
             </div>
-            <div className="relative px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pb-20 lg:pt-32">
-              <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="block uppercase text-yellow-500 drop-shadow-md">
-                  Timely
-                </span>
-              </h1>
-              <p className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
-                subtitle
-              </p>
-              <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
-                {user ? (
-                  <Link
-                    to="/notes"
-                    className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                  >
-                    View Notes for {user.email}
-                  </Link>
-                ) : (
-                  <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
-                    <Link
-                      to="/join"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                    >
-                      Sign up
-                    </Link>
-                    <Link
-                      to="/login"
-                      className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600  "
-                    >
-                      Log In
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
+          ))}
+          <div className="grid h-16 grid-flow-row grid-cols-6 items-center  border-b-2 border-slate-800 bg-slate-50 p-4 last:border-b-0">
+            <input
+              type="text"
+              value={userEmployee.name}
+              onChange={(e) =>
+                setUserEmployee({ ...userEmployee, name: e.target.value })
+              }
+              className="shadow-xs ml-[-2] rounded bg-slate-200 px-2 text-left transition-all hover:bg-slate-300 hover:shadow-sm focus:bg-slate-300"
+            />
+
+            <EditableField
+              userEmployee={userEmployee}
+              setUserEmployee={setUserEmployee}
+              day="monday"
+            />
+            <EditableField
+              userEmployee={userEmployee}
+              setUserEmployee={setUserEmployee}
+              day="tuesday"
+            />
+            <EditableField
+              userEmployee={userEmployee}
+              setUserEmployee={setUserEmployee}
+              day="wednesday"
+            />
+            <EditableField
+              userEmployee={userEmployee}
+              setUserEmployee={setUserEmployee}
+              day="thursday"
+            />
+            <EditableField
+              userEmployee={userEmployee}
+              setUserEmployee={setUserEmployee}
+              day="friday"
+            />
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
+
+interface EditableFieldProps {
+  userEmployee: Employee;
+  setUserEmployee: Function;
+  day: keyof Days;
+}
+
+const EditableField: FunctionComponent<EditableFieldProps> = ({
+  userEmployee,
+  setUserEmployee,
+  day,
+}) => {
+  return (
+    <Field
+      userEmployee={userEmployee}
+      setUserEmployee={setUserEmployee}
+      day={day}
+    />
+  );
+};
+
+interface FieldProps {
+  userEmployee: Employee;
+  setUserEmployee: Function;
+  day: keyof Days;
+}
+
+const Field: FunctionComponent<FieldProps> = ({
+  userEmployee,
+  setUserEmployee,
+  day,
+}) => {
+  return (
+    <div
+      className="cursor-pointer select-none border-r-2 border-slate-300 text-center first:border-l-2 last:border-r-0"
+      onClick={() =>
+        setUserEmployee({
+          ...userEmployee,
+          days: {
+            ...userEmployee.days,
+            [day]: !userEmployee?.days?.[day],
+          },
+        })
+      }
+    >
+      {userEmployee.days[day] ? "in" : "-"}
+    </div>
+  );
+};

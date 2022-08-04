@@ -3,14 +3,12 @@ import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
 
-import { getUserId, createUserSession } from "~/session.server";
-
-import { createUser, getUserByEmail } from "~/models/user.server";
 import { safeRedirect, validateEmail } from "~/utils";
+import { supabase } from "~/db.server";
 
 export async function loader({ request }: LoaderArgs) {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
+  // const userId = await getUserId(request);
+  // if (userId) return redirect("/");
   return json({});
 }
 
@@ -40,28 +38,34 @@ export async function action({ request }: ActionArgs) {
       { status: 400 }
     );
   }
-
-  const existingUser = await getUserByEmail(email);
-  if (existingUser) {
-    return json(
-      {
-        errors: {
-          email: "A user already exists with this email",
-          password: null,
-        },
-      },
-      { status: 400 }
-    );
-  }
-
-  const user = await createUser(email, password);
-
-  return createUserSession({
-    request,
-    userId: user.id,
-    remember: false,
-    redirectTo,
+  console.log(supabase);
+  const { user, session, error } = await supabase.auth.signUp({
+    email,
+    password,
   });
+  console.log(user, session, error);
+  // const existingUser = await getUserByEmail(email);
+  // if (existingUser) {
+  //   return json(
+  //     {
+  //       errors: {
+  //         email: "A user already exists with this email",
+  //         password: null,
+  //       },
+  //     },
+  //     { status: 400 }
+  //   );
+  // }
+
+  // const user = await createUser(email, password);
+
+  // return createUserSession({
+  //   request,
+  //   userId: "1234",
+  //   remember: false,
+  //   redirectTo,
+  // });
+  return {};
 }
 
 export const meta: MetaFunction = () => {
@@ -77,13 +81,13 @@ export default function Join() {
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
-    if (actionData?.errors?.email) {
-      emailRef.current?.focus();
-    } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
-    }
-  }, [actionData]);
+  // React.useEffect(() => {
+  //   if (actionData?.errors?.email) {
+  //     emailRef.current?.focus();
+  //   } else if (actionData?.errors?.password) {
+  //     passwordRef.current?.focus();
+  //   }
+  // }, [actionData]);
 
   return (
     <div className="flex min-h-full flex-col justify-center">
@@ -105,15 +109,15 @@ export default function Join() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
+                // aria-invalid={actionData?.errors?.email ? true : undefined}
                 aria-describedby="email-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
               />
-              {actionData?.errors?.email && (
+              {/* {actionData?.errors?.email && (
                 <div className="pt-1 text-red-700" id="email-error">
                   {actionData.errors.email}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 
@@ -131,15 +135,15 @@ export default function Join() {
                 name="password"
                 type="password"
                 autoComplete="new-password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
+                // aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
                 className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
               />
-              {actionData?.errors?.password && (
+              {/* {actionData?.errors?.password && (
                 <div className="pt-1 text-red-700" id="password-error">
                   {actionData.errors.password}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 
