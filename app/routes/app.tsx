@@ -1,6 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Form, Link, Outlet } from "@remix-run/react";
 
 export default function NotesPage() {
   // const data = useLoaderData<typeof loader>();
