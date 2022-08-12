@@ -9,14 +9,17 @@ import Button from "~/components/Button";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 
+import { Firestore } from "firebase/firestore/lite";
+
 export const loader: LoaderFunction = async () => {
-  const dbEmployees: Employee[] = [
+  const employees: Employee[] = [
     { id: 0, name: "Alex", days: { monday: true } },
     { id: 1, name: "Lora", days: { tuesday: true } },
     { id: 2, name: "Snowby", days: {} },
     { id: 3, name: "Clooney Herrmann", days: {} },
   ];
-  return json({ employees: dbEmployees });
+
+  return json({ employees });
 };
 
 export default function NoteIndexPage() {

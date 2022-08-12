@@ -2,9 +2,10 @@ import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
+import firestore from "~/firebase.server";
+// import { supabase } from "~/firebase.server";
 
 import { safeRedirect, validateEmail } from "~/utils";
-import { supabase } from "~/db.server";
 
 export async function loader({ request }: LoaderArgs) {
   // const userId = await getUserId(request);
